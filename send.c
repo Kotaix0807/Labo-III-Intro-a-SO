@@ -29,11 +29,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #define clave 234  /* Numero de cola */
 #define MAX 20
 
+#define DATA_MAX 100
 
-int main(){
+char gen_data();
+double delay();
+
+int main()
+{
+    srand(time(0));   
     int msqid;			/* identificador de la cola de mensajes */
 
     struct {
@@ -63,4 +70,54 @@ int main(){
         exit(-1);
     }
     return 0;
+}
+
+double delay()
+{
+    double miliseg = 0, segs = 0;
+    clock_t tiempo_inicio, tiempo_final;
+
+    segs = (rand() % 501) + 500;
+
+    miliseg = 1000 * segs;
+
+    tiempo_inicio = clock();
+    while (clock() < tiempo_inicio + miliseg);
+    tiempo_final = clock();
+    tiempo_final -= tiempo_inicio;
+
+    return (double) tiempo_final/CLOCKS_PER_SEC;
+}
+char gen_data(){
+    return (char)(rand() % 26) + 65;
+}
+char *msg(){
+    FILE *MSG = fopen("msg.txt", "r");
+    if(!MSG){
+        printf("Error: no existe e archivo msg.txt\n");
+        return NULL;
+    }
+    int linescount = 0;
+	int charcount = 0;
+	int WMAX = 0;
+    char t;
+    while ((t = fgetc(MSG)) != EOF)
+	{
+        if (t == '\n')
+		{
+			if(charcount > WMAX){
+				WMAX = charcount;
+			}
+            linescount++;
+			charcount = 0;
+		}
+		else
+			charcount++;
+    }
+	if(linescount > 1)
+		linescount++; //Linea adicional porque no existe \n inicial
+	//printf("Largo linea [%d]: %d\n", linescount, WMAX);
+    rewind(MSG);
+	printf("Total lineas: %d, Largo maximo total: %d\n", linescount, WMAX);
+
 }
