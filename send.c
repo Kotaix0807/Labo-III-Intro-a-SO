@@ -23,52 +23,119 @@
 //           kill <No Procso leido con pS>: Elimina el proceso indicado por usuario
 
 
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h> 
 #include <time.h>
+#include <math.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/shm.h> 
+#include <sys/wait.h> 
+
+
 #define clave 234  /* Numero de cola */
-#define MAX 20
+#define MAX 32
 
 #define DATA_MAX 100
 
 char gen_data();
 double delay();
+char *msg(const char *file);
+void run_sender(const char *rol, const char *archivo, long tipo, int msqid, int longitud, int *shared_data);
+
+struct {
+    long tipo;
+    char cadena[MAX];
+}mensaje;
 
 int main()
 {
     srand(time(0));   
     int msqid;			/* identificador de la cola de mensajes */
+    int shmid;
+    int *shared_data;
+    int created_shm = 0;
 
-    struct {
-        long tipo;
-        char cadena[MAX];
-    }mensaje;
-
+    key_t key = 1234;
     int longitud = sizeof(mensaje) - sizeof(mensaje.tipo);
 
-    /* Creación de la cola de mensajes */
+    if ((shmid = shmget(key, sizeof(int), IPC_CREAT | IPC_EXCL | 0666)) < 0) 
+    { 
+        if (errno != EEXIST)
+        {
+            perror("Error al crear la memoria compartida");
+            exit(1); 
+        }
+
+        shmid = shmget(key, sizeof(int), 0666);
+        if (shmid < 0)
+        {
+            perror("Error al obtener la memoria compartida existente");
+            exit(1);
+        }
+    }
+    else
+    {
+        created_shm = 1;
+    }
+
+    shared_data = shmat(shmid, NULL, 0);
+    if (shared_data == (void *)-1) 
+    { 
+        perror("Error al adjuntar la memoria compartida"); 
+        exit(1); 
+    } 
+
+    if (created_shm)
+    {
+        *shared_data = 0;
+    }
+
     if((msqid = msgget(clave, IPC_CREAT | 0600)) == -1)
     {
-        printf("Error al crear la cola de mensajes \n");
+        perror("Error al crear la cola de mensajes");
         exit(-1);
     }
 
-    /* Preparación de un mensaje */
-    mensaje.tipo = 1;
-    strcpy(mensaje.cadena, "HOLA MUNDO");
-
-    printf("Mensaje enviado desde SEND: %s\n",mensaje.cadena);
-
-    /* Envio de mensaje a la cola clave=234 */
-    if(msgsnd(msqid, &mensaje, longitud, 0) == -1)
+    pid_t pid1 = fork();
+    if (pid1 < 0)
     {
-        printf("Error al enviar un mensaje a la cola de mensajes \n");
-        exit(-1);
+        perror("Error al crear al Padre");
+        exit(1);
     }
+    else if (pid1 == 0)
+    {
+        printf("Proceso Padre (PID: %d) en ejecución...\n", getpid());
+        run_sender("Padre", "Padre.txt", 2, msqid, longitud, shared_data);
+        shmdt(shared_data);
+        exit(0);
+    }
+
+    pid_t pid2 = fork();
+    if (pid2 < 0)
+    {
+        perror("Error al crear al Hijo");
+        exit(1);
+    }
+    else if (pid2 == 0)
+    {
+        printf("Proceso Hijo (PID: %d) en ejecución...\n", getpid());
+        run_sender("Hijo", "Hijo.txt", 3, msqid, longitud, shared_data);
+        shmdt(shared_data);
+        exit(0);
+    }
+
+    printf("Proceso Abuelo (PID: %d) en ejecución...\n", getpid());
+    run_sender("Abuelo", "Abuelo.txt", 1, msqid, longitud, shared_data);
+
+    waitpid(pid1, NULL, 0);
+    waitpid(pid2, NULL, 0);
+    shmdt(shared_data);
+
     return 0;
 }
 
@@ -91,16 +158,18 @@ double delay()
 char gen_data(){
     return (char)(rand() % 26) + 65;
 }
-char *msg(){
-    FILE *MSG = fopen("msg.txt", "r");
+char *msg(const char *File){
+    FILE *MSG = fopen(File, "r");
     if(!MSG){
-        printf("Error: no existe e archivo msg.txt\n");
+        printf("Error: no existe el archivo %s\n", File);
         return NULL;
     }
-    int linescount = 0;
-	int charcount = 0;
-	int WMAX = 0;
-    char t;
+
+    size_t linescount = 0;
+	size_t charcount = 0;
+	size_t WMAX = 0;
+    int t;
+
     while ((t = fgetc(MSG)) != EOF)
 	{
         if (t == '\n')
@@ -111,13 +180,73 @@ char *msg(){
             linescount++;
 			charcount = 0;
 		}
-		else
+		else{
 			charcount++;
+        }
     }
-	if(linescount > 1)
-		linescount++; //Linea adicional porque no existe \n inicial
-	//printf("Largo linea [%d]: %d\n", linescount, WMAX);
-    rewind(MSG);
-	printf("Total lineas: %d, Largo maximo total: %d\n", linescount, WMAX);
 
+    if(charcount > 0){
+        if(charcount > WMAX){
+            WMAX = charcount;
+        }
+        linescount++;
+    }
+
+	if(linescount == 0){
+        fclose(MSG);
+        return NULL;
+    }
+
+    rewind(MSG);
+	//printf("Total lineas: %zu, Largo maximo total: %zu\n", linescount, WMAX);
+
+    size_t buffer_len = WMAX + 2;
+    char *line = malloc(buffer_len);
+    if(!line){
+        fclose(MSG);
+        return NULL;
+    }
+
+    size_t target = rand() % linescount;
+    size_t current_line = 0;
+    while(fgets(line, buffer_len, MSG)){
+        if(current_line == target){
+            line[strcspn(line, "\r\n")] = '\0';
+            fclose(MSG);
+            return line;
+        }
+        current_line++;
+    }
+
+    fclose(MSG);
+    free(line);
+    return NULL;
+}
+
+void run_sender(const char *rol, const char *archivo, long tipo, int msqid, int longitud, int *shared_data)
+{
+    while (*shared_data < 100)
+    {
+        char *linea = msg(archivo);
+        if (!linea)
+        {
+            fprintf(stderr, "No se pudo leer una línea desde %s\n", archivo);
+            break;
+        }
+
+        mensaje.tipo = tipo;
+        snprintf(mensaje.cadena, MAX, "%s:%s", rol, linea);
+        free(linea);
+
+        if(msgsnd(msqid, &mensaje, longitud, 0) == -1)
+        {
+            perror("Error al enviar un mensaje a la cola de mensajes");
+            break;
+        }
+
+        printf("[%s - PID %d] Mensaje enviado: %s (contador compartido: %d)\n", rol, getpid(), mensaje.cadena, *shared_data);
+        delay();
+    }
+
+    printf("[%s - PID %d] Deteniendo envíos. shared_data=%d\n", rol, getpid(), *shared_data);
 }
