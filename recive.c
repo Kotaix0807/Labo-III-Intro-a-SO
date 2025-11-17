@@ -95,7 +95,7 @@ int main()
         recibidos++;
         *shared_data = recibidos;
         printf("Mensaje #%d (tipo %ld) en RECEIVE: %s\n", recibidos, mensaje.tipo, mensaje.cadena);
-        fprintf(file, "Mensaje #%d (tipo %ld) en RECEIVE: %s\n", recibidos, mensaje.tipo, mensaje.cadena);
+        fprintf(file, "%s\n", mensaje.cadena);
 
     }
     fclose(file);

@@ -235,7 +235,7 @@ void run_sender(const char *rol, const char *archivo, long tipo, int msqid, int 
         }
 
         mensaje.tipo = tipo;
-        snprintf(mensaje.cadena, MAX, "%s:%s", rol, linea);
+        snprintf(mensaje.cadena, MAX, "%s: %s", rol, linea);
         free(linea);
 
         if(msgsnd(msqid, &mensaje, longitud, 0) == -1)
