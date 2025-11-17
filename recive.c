@@ -5,11 +5,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <unistd.h>
+#include <signal.h>
 
 #define clave 234 
 #define MAX 64
 #define MAX_MSGS 100
 
+struct {
+    long tipo;
+    char cadena[MAX];
+} mensaje;
 
 int main()
 {
@@ -18,15 +24,17 @@ int main()
     int *shared_data;
     int created_shm = 0;
     key_t key = 1234;
-
-    struct {
-        long tipo;
-        char cadena[MAX];
-    } mensaje;
-
+    FILE* file = fopen("resultados.txt", "w+");
+    
     int longitud = sizeof(mensaje) - sizeof(mensaje.tipo);
 
+    if(!file)
+    {
+        printf("Error al abrir el archivo resultados.txt\n");
+        exit(-1);
+    }
     /* Creación de la cola de mensajes */
+
     if((msqid = msgget(clave, IPC_CREAT | 0600)) == -1)
     {
         perror("Error al crear la cola de mensajes");
@@ -87,8 +95,10 @@ int main()
         recibidos++;
         *shared_data = recibidos;
         printf("Mensaje #%d (tipo %ld) en RECEIVE: %s\n", recibidos, mensaje.tipo, mensaje.cadena);
-    }
+        fprintf(file, "Mensaje #%d (tipo %ld) en RECEIVE: %s\n", recibidos, mensaje.tipo, mensaje.cadena);
 
+    }
+    fclose(file);
     printf("Se recibieron %d mensajes. Eliminando recursos IPC...\n", recibidos);
 
     /* Borrado de la cola de mensajes */
@@ -106,6 +116,6 @@ int main()
     {
         perror("Error al eliminar memoria compartida");
     }
-
+    //kill(getpid(), SIGTERM);
     return 0;
 }

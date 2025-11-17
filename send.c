@@ -38,7 +38,7 @@
 
 
 #define clave 234  /* Numero de cola */
-#define MAX 32
+#define MAX 64
 
 #define DATA_MAX 100
 
@@ -225,7 +225,7 @@ char *msg(const char *File){
 
 void run_sender(const char *rol, const char *archivo, long tipo, int msqid, int longitud, int *shared_data)
 {
-    while (*shared_data < 100)
+    while (*shared_data < DATA_MAX)
     {
         char *linea = msg(archivo);
         if (!linea)
