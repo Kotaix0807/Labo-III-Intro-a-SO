@@ -21,8 +21,6 @@ int main()
 {
     int msqid; /* identificador de la cola de mensajes */
     int shmid;
-    int *shared_data;
-    int created_shm = 0;
     key_t key = 1234;
     FILE* file = fopen("resultados.txt", "w+");
     
@@ -55,23 +53,6 @@ int main()
             exit(-1);
         }
     }
-    else
-    {
-        created_shm = 1;
-    }
-
-    shared_data = shmat(shmid, NULL, 0);
-    if (shared_data == (void *)-1)
-    {
-        perror("Error al adjuntar memoria compartida");
-        exit(-1);
-    }
-
-    if (created_shm)
-    {
-        *shared_data = 0;
-    }
-
     int recibidos = 0;
     while (recibidos < MAX_MSGS)
     {
@@ -93,7 +74,6 @@ int main()
         }
 
         recibidos++;
-        *shared_data = recibidos;
         printf("Mensaje #%d (tipo %ld) en RECEIVE: %s\n", recibidos, mensaje.tipo, mensaje.cadena);
         fprintf(file, "%s\n", mensaje.cadena);
 
@@ -106,11 +86,6 @@ int main()
     {
         perror("Error al eliminar la cola de mensajes");
     }   
-
-    if (shmdt(shared_data) == -1)
-    {
-        perror("Error al desacoplar memoria compartida");
-    }
 
     if (shmctl(shmid, IPC_RMID, NULL) == -1)
     {

@@ -3,3 +3,5 @@ build:
 run:
 	./recive&
 	./send
+clear:
+	rm -f ./recive ./send

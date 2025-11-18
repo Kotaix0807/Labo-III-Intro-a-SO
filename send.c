@@ -244,6 +244,7 @@ void run_sender(const char *rol, const char *archivo, long tipo, int msqid, int 
             break;
         }
 
+        (*shared_data)++;
         printf("[%s - PID %d] Mensaje enviado: %s (contador compartido: %d)\n", rol, getpid(), mensaje.cadena, *shared_data);
         delay();
     }

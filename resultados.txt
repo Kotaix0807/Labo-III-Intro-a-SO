@@ -1,100 +1,100 @@
-Abuelo:ELOY
-Padre:PROFE
-Hijo:VUELA
-Hijo:ALTO
-Padre:PONGANOS
-Abuelo:LUCIANO
-Hijo:VUELA
-Abuelo:SON
-Padre:NOTA_7
-Hijo:VUELA
-Abuelo:SON
-Padre:NOTA_7
-Hijo:ALTO
-Padre:NOTA_7
-Abuelo:DARIO
-Hijo:ALTO
-Abuelo:DARIO
-Padre:NOTA_7
-Hijo:ALTO
-Abuelo:GABO
-Padre:POR_FAVOR
-Hijo:VUELA
-Abuelo:SON
-Padre:NOTA_7
-Hijo:CASICCIA
-Abuelo:ELOY
-Padre:PROFE
-Hijo:VUELA
-Abuelo:GABO
-Padre:POR_FAVOR
-Hijo:ALTO
-Abuelo:MUNDO
-Padre:PONGANOS
-Hijo:CASICCIA
-Abuelo:CRACKS
-Padre:POR_FAVOR
-Hijo:ALTO
-Abuelo:DARIO
-Padre:NOTA_7
-Hijo:CASICCIA
-Abuelo:DARIO
-Padre:NOTA_7
-Hijo:CASICCIA
-Abuelo:MUNDO
-Padre:PONGANOS
-Hijo:ALTO
-Abuelo:MUNDO
-Padre:PONGANOS
-Hijo:ALTO
-Abuelo:CRACKS
-Padre:POR_FAVOR
-Hijo:CASICCIA
-Abuelo:GABO
-Padre:POR_FAVOR
-Hijo:VUELA
-Abuelo:ELOY
-Padre:PROFE
-Hijo:ALTO
-Abuelo:ELOY
-Padre:PROFE
-Hijo:VUELA
-Abuelo:HOLA
-Padre:PROFE
-Hijo:CASICCIA
-Abuelo:MUNDO
-Padre:PONGANOS
-Hijo:VUELA
-Abuelo:GABO
-Padre:POR_FAVOR
-Hijo:VUELA
-Abuelo:LUCIANO
-Padre:PONGANOS
-Hijo:CASICCIA
-Abuelo:DARIO
-Padre:NOTA_7
-Hijo:ALTO
-Abuelo:CRACKS
-Padre:POR_FAVOR
-Hijo:ALTO
-Abuelo:LUCIANO
-Padre:PONGANOS
-Hijo:ALTO
-Abuelo:DARIO
-Padre:NOTA_7
-Hijo:VUELA
-Abuelo:HOLA
-Padre:PROFE
-Hijo:CASICCIA
-Abuelo:LUCIANO
-Padre:PONGANOS
-Hijo:VUELA
-Abuelo:ELOY
-Padre:PROFE
-Hijo:ALTO
-Abuelo:CRACKS
-Padre:POR_FAVOR
-Hijo:ALTO
-Abuelo:LUCIANO
-Padre:PONGANOS
-Hijo:VUELA
+Padre: PROFE
+Abuelo: ELOY
+Hijo: CASICCIA
+Padre: PONGANOS
+Abuelo: MUNDO
+Hijo: VUELA
+Abuelo: GABO
+Padre: POR_FAVOR
+Hijo: ALTO
+Abuelo: CRACKS
+Padre: POR_FAVOR
+Hijo: ALTO
+Abuelo: MUNDO
+Padre: PONGANOS
+Hijo: CASICCIA
+Abuelo: MUNDO
+Padre: PONGANOS
+Hijo: ALTO
+Abuelo: ELOY
+Padre: PROFE
+Hijo: VUELA
+Hijo: ALTO
+Abuelo: DARIO
+Padre: NOTA_7
+Hijo: VUELA
+Abuelo: ELOY
+Padre: PROFE
+Hijo: VUELA
+Abuelo: GABO
+Padre: POR_FAVOR
+Hijo: ALTO
+Abuelo: DARIO
+Padre: NOTA_7
+Hijo: CASICCIA
+Abuelo: SON
+Padre: NOTA_7
+Hijo: CASICCIA
+Abuelo: SON
+Padre: NOTA_7
+Hijo: ALTO
+Abuelo: SON
+Padre: NOTA_7
+Hijo: VUELA
+Abuelo: GABO
+Padre: POR_FAVOR
+Hijo: ALTO
+Abuelo: LUCIANO
+Padre: PONGANOS
+Hijo: VUELA
+Abuelo: ELOY
+Padre: PROFE
+Hijo: VUELA
+Abuelo: HOLA
+Padre: PROFE
+Abuelo: DARIO
+Hijo: CASICCIA
+Padre: NOTA_7
+Abuelo: SON
+Hijo: ALTO
+Padre: NOTA_7
+Abuelo: HOLA
+Hijo: VUELA
+Padre: PROFE
+Abuelo: HOLA
+Hijo: ALTO
+Padre: PROFE
+Abuelo: LUCIANO
+Hijo: CASICCIA
+Padre: PONGANOS
+Abuelo: MUNDO
+Hijo: CASICCIA
+Padre: PONGANOS
+Abuelo: MUNDO
+Hijo: ALTO
+Padre: PONGANOS
+Abuelo: HOLA
+Hijo: ALTO
+Padre: PROFE
+Abuelo: DARIO
+Hijo: CASICCIA
+Padre: NOTA_7
+Abuelo: ELOY
+Hijo: CASICCIA
+Padre: PROFE
+Abuelo: MUNDO
+Hijo: VUELA
+Padre: PONGANOS
+Abuelo: MUNDO
+Hijo: CASICCIA
+Padre: PONGANOS
+Abuelo: CRACKS
+Hijo: ALTO
+Padre: POR_FAVOR
+Abuelo: GABO
+Hijo: VUELA
+Padre: POR_FAVOR
+Abuelo: ELOY
+Hijo: VUELA
+Padre: PROFE
+Abuelo: DARIO
